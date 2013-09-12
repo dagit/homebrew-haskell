@@ -69,9 +69,9 @@ class Ghc < Formula
     subprefix = buildpath+'subfo'
 
     Ghcbinary.new.brew do
-      # ensure configure script does not use Xcode 5 "gcc" aka clang on 10.9
+      # ensure configure script does not use Xcode 5 "gcc" aka clang
       bin_cfg_args =  %W[ --prefix=#{subprefix} ]
-      bin_cfg_args << "--with-gcc=#{ENV.cc}" if MacOS.version >= :mavericks
+      bin_cfg_args << "--with-gcc=#{ENV.cc}"
 
       system "./configure", *bin_cfg_args
       system 'make install'
@@ -90,9 +90,9 @@ class Ghc < Formula
         arch = 'i386'
       end
 
-      # ensure configure script does not use Xcode 5 "gcc" aka clang on 10.9
+      # ensure configure script does not use Xcode 5 "gcc" aka clang
       src_cfg_args = %W[ --prefix=#{prefix} --build=#{arch}-apple-darwin ]
-      src_cfg_args << "--with-gcc=#{ENV.cc}" if MacOS.version >= :mavericks
+      src_cfg_args << "--with-gcc=#{ENV.cc}"
 
       system "./configure", *src_cfg_args
       system 'make'
