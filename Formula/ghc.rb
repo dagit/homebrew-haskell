@@ -1,12 +1,6 @@
 require 'formula'
 
 class Ghcbinary < Formula
-  if MacOS.version <= :leopard
-    raise Homebrew::InstallationError.new(self, <<-EOS.undent
-      Mac OS X versions 10.5 and earlier are not supported by the GHC formula.
-      EOS
-    )
-  end
   if Hardware.is_64_bit? and not build.build_32_bit?
     if MacOS.version >= :lion
       url 'http://www.haskell.org/ghc/dist/7.6.3/ghc-7.6.3-x86_64-apple-darwin.tar.bz2'
@@ -57,7 +51,7 @@ class Ghc < Formula
   end
 
   def patches
-    # fixes ghc 7.6.3 compilation on 10.9
+    # Fixes 7.6.3 compilation on 10.9
     DATA if MacOS.version >= :mavericks
   end
 
@@ -65,16 +59,16 @@ class Ghc < Formula
     # Move the main tarball contents into a subdirectory
     (buildpath+'Ghcsource').install Dir['*']
 
-    # Define where the subformula will temporarily install itself
-    subprefix = buildpath+'subfo'
-
     Ghcbinary.new.brew do
-      # ensure configure script does not use Xcode 5 "gcc" aka clang
-      bin_cfg_args =  %W[ --prefix=#{subprefix} ]
-      bin_cfg_args << "--with-gcc=#{ENV.cc}"
+      # Define where the subformula will temporarily install itself
+      subprefix = buildpath+'subfo'
 
-      system "./configure", *bin_cfg_args
-      system 'make install'
+      # ensure configure does not use Xcode 5 "gcc" which is actually clang
+      args = ["--prefix=#{subprefix}"]
+      args << "--with-gcc=#{ENV.cc}" if ENV.compiler == :gcc
+
+      system "./configure", *args
+      system 'make -j1 install' # -j1 fixes an intermittent race condition
       ENV.prepend 'PATH', subprefix/'bin', ':'
     end
 
@@ -86,15 +80,15 @@ class Ghc < Formula
       if Hardware.is_64_bit? and not build.build_32_bit?
         arch = 'x86_64'
       else
-        ENV.m32 # Need to force this to fix build error on internal libgmp.
+        ENV.m32 # Need to force this to fix build error on internal libgmp_ar.
         arch = 'i386'
       end
 
-      # ensure configure script does not use Xcode 5 "gcc" aka clang
-      src_cfg_args = %W[ --prefix=#{prefix} --build=#{arch}-apple-darwin ]
-      src_cfg_args << "--with-gcc=#{ENV.cc}"
+      # ensure configure does not use Xcode 5 "gcc" which is actually clang
+      args = ["--prefix=#{prefix}", "--build=#{arch}-apple-darwin"]
+      args << "--with-gcc=#{ENV.cc}" if ENV.compiler == :gcc
 
-      system "./configure", *src_cfg_args
+      system "./configure", *args
       system 'make'
       if build.include? 'tests'
         Ghctestsuite.new.brew do
@@ -125,7 +119,7 @@ index 652fbea..a21811e 100644
 +++ b/includes/HsFFI.h
 @@ -21,7 +21,7 @@ extern "C" {
  #include "stg/Types.h"
- 
+
  /* get limits for integral types */
 -#ifdef HAVE_STDINT_H
 +#if defined HAVE_STDINT_H && !defined USE_INTTYPES_H_FOR_RTS_PROBES_D
@@ -139,7 +133,7 @@ index 13f40f8..226f881 100644
 @@ -6,6 +6,12 @@
   *
   * ---------------------------------------------------------------------------*/
- 
+
 +#ifdef __APPLE__ && __MACH__
 +# if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 +#  define USE_INTTYPES_H_FOR_RTS_PROBES_D
@@ -148,14 +142,13 @@ index 13f40f8..226f881 100644
 +
  #include "HsFFI.h"
  #include "rts/EventLogFormat.h"
- 
+
 diff --git a/utils/mkdirhier/mkdirhier.sh b/utils/mkdirhier/mkdirhier.sh
 index 4c5d5f7..80762f4 100644
 --- a/utils/mkdirhier/mkdirhier.sh
 +++ b/utils/mkdirhier/mkdirhier.sh
 @@ -1,4 +1,4 @@
  #!/bin/sh
- 
+
 -mkdir -p ${1+"$@"}
 +mkdir -p ${1+"./$@"}
- 
