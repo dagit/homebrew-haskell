@@ -3,7 +3,8 @@ Haskell related formulas for [Homebrew](http://brew.sh).
 
 ### Compatibility
 
-These formulas should be compatible with **10.6 ≤ OS X ≤ 10.9**. They are _not_ heavily tested on versions prior to **OS X ≤ 10.6**.
+*   These formulas should be compatible with **10.6 ≤ OS X ≤ 10.9**
+*   They are _not_ heavily tested on versions prior to **OS X ≤ 10.6**
 
 ###### NOTE:
 _I hope to address this by employing an automated testing system that includes older versions of OS X._
