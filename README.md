@@ -1,27 +1,34 @@
 # Homebrew-Haskell
-Haskell related formulæ for [Homebrew](http://brew.sh).
+Haskell related formulas for [Homebrew](http://brew.sh).
 
-### How do I install these formulæ?
+### Compatibility
+
+These formulas should be compatible with **10.6 ≤ OS X ≤ 10.9**. They are _not_ heavily tested on versions prior to **OS X ≤ 10.6**.
+
+###### NOTE:
+_I hope to address this by employing an automated testing system that includes older versions of OS X._
+
+### How do I install these formulas?
 Just `brew tap darinmorrison/haskell` then `brew install <formula>`.
 
 _Read more about how Homebrew taps work [here](https://github.com/mxcl/homebrew/wiki/brew-tap)._
 
-##### NOTE:
-Some of these formulæ may have name conflicts with existing formulæ from other tapped repositories or from the main Homebrew repository at [mxcl/homebrew][]. When that happens, you can still install the versions from this repository by using the fully qualified name `darinmorrison/haskell/<formula>`.
+###### NOTE:
+Some of these formulas may have name conflicts with existing formulas from other tapped repositories or from the main Homebrew repository at [mxcl/homebrew]. When that happens, you can still install the versions from this repository by using the fully qualified name `darinmorrison/haskell/<formula>`.
 
-### Can I install these formulæ without tapping the repository?
+### Can I install these formulas without tapping the repository?
 Of course! You can install any individual formula by specifying its URL:
 
     brew install https://raw.github.com/darinmorrison/homebrew-haskell/master/<formula>.rb
 
-### Why the duplicates of  [mxcl/homebrew][] formulæ?
-This repository is part of a project undertaken to help improve the state of Haskell formulæ for all Homebrew users. Much of the work here takes the form of patches to existing formulæ to fix bugs, compatibility issues, port new versions, etc.
+### Why the duplicates of  [mxcl/homebrew] formulas?
+This repository exists to serve a few main purposes:
 
-These patches mostly find their way back to the main Homebrew repository but that can take time. We have to to work through the pull requests, discussion, refactors, merges, etc. before making new stuff available there. Here, people can play around with new stuff immediately! :grinning:
+1. Provide a staging ground for new Haskell-related Homebrew developments: patches, new formulas, enhancements, etc.
 
-However, not all of the changes and improvements from here get merged into the main Homebrew repository. This can happen for a variety of reasons, ranging from stylistic to philosophical to practical, etc.. In those cases, I often still find it worthwhile to have somewhere to offer the unabridged, uncut, original submissions.
+2. Provide a collection of enhanced or niche Haskell-related formula—stuff that may not end up in [mxcl/homebrew] for whatever reason.
 
-This repository is also intended to hold Haskell related formulæ, functionality, and tools that perhaps don't fit within the main Homebrew repository. Examples may include formulæ with added configuration options useful especially to developers or researchers but where the complexity trade off is not deemed worthwhile in general.
+3. Provide a collection of formulas that favor Haskell conventions over Homebrew conventions whenever a choice along those lines must be made. 
 
 ### Docs
 `brew help`, `man brew`, or the Homebrew [wiki][].
